@@ -1,23 +1,29 @@
 import flet as ft
 import os
 import re
+import json
 
 def cargar_escuelas():
+    # Leer el JSON limpio
+    with open("instituciones.json", encoding="utf-8") as f:
+        instituciones = json.load(f)
+
+    # Adaptar los campos a la estructura que usaba tu app
     escuelas = []
-    with open("lista.txt", encoding="utf-8") as f:
-        for linea in f:
-            partes = linea.strip().split("-")
-            if len(partes) >= 4:
-                telefono = partes[3].strip()
-                telefono = telefono.rstrip("-")
-                telefono = telefono.replace("-15-", "-")
-                telefono = telefono.replace("-", "")
-                escuelas.append({
-                    "nombre": partes[0].strip(),
-                    "localidad": partes[1].strip(),
-                    "director": partes[2].strip(),
-                    "telefono": telefono
-                })
+    for inst in instituciones:
+        telefono = str(inst.get("Teléfono part", "")).replace("-", "").replace(" ", "")
+        escuelas.append({
+            "nombre": inst.get("ESTABLECIMIENTO", ""),
+            "localidad": inst.get("Ubicación", ""),
+            "director": inst.get("Director", ""),
+            "telefono": telefono,
+            "domicilio": inst.get("Domicilio", ""),
+            "email": inst.get("e-mail", ""),
+            "cue": inst.get("CUE", ""),
+            "edificio": inst.get("Edificio", ""),
+            "creacion": inst.get("Creación", ""),
+            "nombre_completo": inst.get("Nombre", "")
+        })
     return escuelas
 
 def normalizar(texto):
@@ -85,6 +91,11 @@ def main(page: ft.Page):
                             ft.Text(esc["nombre"], size=20),
                             ft.Text(f"Localidad: {esc['localidad']}", weight=ft.FontWeight.BOLD),
                             ft.Text(f"Director/a: {esc['director']}", weight=ft.FontWeight.BOLD),
+                            ft.Text(f"Domicilio: {esc['domicilio']}"),
+                            ft.Text(f"Email: {esc['email']}"),
+                            ft.Text(f"CUE: {esc['cue']}"),
+                            ft.Text(f"Edificio: {esc['edificio']}"),
+                            ft.Text(f"Creación: {esc['creacion']}"),
                             ft.Row([
                                 ft.Column([
                                     ft.IconButton(
