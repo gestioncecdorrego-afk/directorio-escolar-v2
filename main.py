@@ -4,14 +4,12 @@ import re
 import json
 
 def cargar_escuelas():
-    # Leer el JSON limpio
     with open("instituciones.json", encoding="utf-8") as f:
         instituciones = json.load(f)
 
-    # Adaptar los campos a la estructura que usaba tu app
     escuelas = []
     for inst in instituciones:
-        telefono = str(inst.get("Teléfono part", "")).replace("-", "").replace(" ", "")
+        telefono = str(inst.get("Teléfono", "")).replace("-", "").replace(" ", "")
         escuelas.append({
             "nombre": inst.get("ESTABLECIMIENTO", ""),
             "localidad": inst.get("Ubicación", ""),
@@ -56,7 +54,7 @@ def main(page: ft.Page):
         page.add(
             ft.Container(
                 content=ft.Column([
-                    ft.Text("Acceso al Directorio Escolar", size=25, weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE),
+                    ft.Text("Acceso al Directorio Escolar", size=25, weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_ACCENT),
                     clave,
                     ft.Button(content=ft.Text("Ingresar"), on_click=validar,
                               style=ft.ButtonStyle(bgcolor=ft.Colors.BLUE, color=ft.Colors.WHITE))
@@ -88,14 +86,14 @@ def main(page: ft.Page):
                 tarjeta = ft.Card(
                     content=ft.Container(
                         content=ft.Column([
-                            ft.Text(esc["nombre"], size=20),
-                            ft.Text(f"Localidad: {esc['localidad']}", weight=ft.FontWeight.BOLD),
-                            ft.Text(f"Director/a: {esc['director']}", weight=ft.FontWeight.BOLD),
-                            ft.Text(f"Domicilio: {esc['domicilio']}"),
-                            ft.Text(f"Email: {esc['email']}"),
-                            ft.Text(f"CUE: {esc['cue']}"),
-                            ft.Text(f"Edificio: {esc['edificio']}"),
-                            ft.Text(f"Creación: {esc['creacion']}"),
+                            ft.Text(esc["nombre"], size=22, weight=ft.FontWeight.BOLD, color=ft.Colors.DEEP_PURPLE),
+                            ft.Row([ft.Icon(ft.Icons.LOCATION_CITY, color=ft.Colors.BLUE), ft.Text(f"Localidad: {esc['localidad']}")]),
+                            ft.Row([ft.Icon(ft.Icons.PERSON, color=ft.Colors.ORANGE), ft.Text(f"Director/a: {esc['director']}")]),
+                            ft.Row([ft.Icon(ft.Icons.HOME, color=ft.Colors.GREEN), ft.Text(f"Domicilio: {esc['domicilio']}")]),
+                            ft.Row([ft.Icon(ft.Icons.EMAIL, color=ft.Colors.RED), ft.Text(f"Email: {esc['email']}")]),
+                            ft.Row([ft.Icon(ft.Icons.SCHOOL, color=ft.Colors.BLUE_GREY), ft.Text(f"CUE: {esc['cue']}")]),
+                            ft.Row([ft.Icon(ft.Icons.APARTMENT, color=ft.Colors.BROWN), ft.Text(f"Edificio: {esc['edificio']}")]),
+                            ft.Row([ft.Icon(ft.Icons.CALENDAR_MONTH, color=ft.Colors.PINK), ft.Text(f"Creación: {esc['creacion']}")]),
                             ft.Row([
                                 ft.Column([
                                     ft.IconButton(
@@ -122,9 +120,9 @@ def main(page: ft.Page):
                                     ft.Text("Mapa", size=12)
                                 ], alignment=ft.MainAxisAlignment.CENTER)
                             ], spacing=40)
-                        ]),
+                        ], spacing=8),
                         padding=15,
-                        bgcolor=ft.Colors.LIGHT_BLUE_50,
+                        bgcolor=ft.Colors.LIGHT_GREEN_50,
                         border_radius=12,
                         shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.GREY)
                     )
@@ -135,7 +133,7 @@ def main(page: ft.Page):
         buscador.on_change = buscar
 
         page.add(
-            ft.Text("Panel de Búsqueda", size=25, weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE),
+            ft.Text("Panel de Búsqueda", size=25, weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_ACCENT),
             buscador,
             lista,
             ft.Button(content=ft.Text("Cerrar sesión"), on_click=lambda _: login_screen(),
