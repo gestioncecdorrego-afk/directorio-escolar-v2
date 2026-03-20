@@ -8,7 +8,8 @@ def convertir_fecha(valor):
         base = datetime.datetime(1899, 12, 30)
         return (base + datetime.timedelta(days=int(valor))).strftime("%d/%m/%Y")
     except:
-        return str(valor)
+        # Si ya es texto o NaN, lo devuelve tal cual
+        return str(valor) if pd.notna(valor) else ""
 
 def normalizar_telefono(valor):
     if pd.isna(valor):
@@ -27,12 +28,13 @@ def excel_a_json(archivo_excel, archivo_json):
             "ESTABLECIMIENTO": fila.get("ESTABLECIMIENTO", ""),
             "Ubicación": fila.get("Ubicación", ""),
             "Director": fila.get("Director", ""),
-            "Teléfono": normalizar_telefono(fila.get("Teléfono")),
+            # Ajustá aquí el nombre exacto de la columna de teléfono en tu Excel
+            "Teléfono": normalizar_telefono(fila.get("Teléfono part", "")),
             "Domicilio": fila.get("Domicilio", ""),
             "e-mail": fila.get("e-mail", ""),
             "CUE": fila.get("CUE", ""),
             "Edificio": fila.get("Edificio", ""),
-            "Creación": convertir_fecha(fila.get("Creación")),
+            "Creación": convertir_fecha(fila.get("Creación", "")),
             "Nombre": fila.get("Nombre", "")
         })
 
